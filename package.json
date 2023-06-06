@@ -1,7 +1,8 @@
 {
-  "name": "recipy-vue",
+  "name": "veisla",
   "private": true,
-  "version": "0.0.0",
+  "license": "MIT",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
