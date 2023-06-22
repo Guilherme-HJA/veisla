@@ -3,18 +3,19 @@
 </script>
 
 <template>
-  <div>
-    <header class="header">
-      <h1 class="header__title">VEISLA</h1>
-      <h2 class="header__subtitle">Your handy recipy library</h2>
-    </header>
+  <div class="main">
     <main>
       <div class="nav">
-        <router-link to='/ingredients'>
-          Ingredients</router-link> |
-        <router-link to='/'>Home</router-link> |
-        <router-link to='/categories'>Categories</router-link> |
-        <router-link to='/areas'>Areas</router-link>
+        <figure class="nav__image logo">
+          <a href="/"><img src="./assets/logo.png" alt="veisla_logo"></a>
+        </figure>
+        <div class="nav__links">
+          <router-link to='/ingredients'>
+            Ingredients</router-link> |
+          <router-link to='/'>Home</router-link> |
+          <router-link to='/categories'>Categories</router-link> |
+          <router-link to='/areas'>Areas</router-link>
+        </div>
       </div>
       <router-view v-slot="{ Component, route }">
         <transition name="fade" mode="out-in">
@@ -28,7 +29,7 @@
       <strong>VEISLA</strong> by
       <a href="https://github.com/Guilherme-HJA"> Guilherme Araujo </a>,
       is made under MIT License. <br>
-      Source code can be found on Github.
+      Source code can be found on <a href="https://github.com/Guilherme-HJA/veisla">Github.</a>
     </footer>
   </div>
 </template>
@@ -42,18 +43,9 @@
   font-family: $main-font;
 }
 
-.header {
-  text-align: center;
-  color: $black;
-
-  &__title {
-    font-size: $title;
-    font-weight: 300;
-  }
-
-  &__subtitle {
-    font-size: $subsubheading;
-  }
+.main {
+  position: relative;
+  min-height: 100vh;
 }
 
 .nav {
@@ -62,6 +54,9 @@
   text-transform: uppercase;
   text-align: center;
   font-size: 1.6rem;
+
+  display: flex;
+  justify-content: space-between;
 
   a {
     text-decoration: none;
@@ -79,6 +74,17 @@
       }
     }
   }
+
+  &__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
 }
 
 a.router-link-active {
@@ -86,18 +92,39 @@ a.router-link-active {
 }
 
 footer {
+  bottom: 0;
+  left: 0;
+  position: absolute;
 
-  transition: transformY 0.5s ease;
+  width: 100%;
+  height: 10px;
 
-  margin: 1em 0;
   text-align: center;
+
   font-size: 1.1rem;
+
+  padding-top: 3em 0;
+
+  a {
+    text-decoration: none;
+    color: $orange;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
   .header {
     &__title {
       font-size: $title-mobile;
+    }
+  }
+
+  .nav {
+    flex-direction: column;
+
+    img {
+      height: 300px;
+      width: 300px;
     }
   }
 }

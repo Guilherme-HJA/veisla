@@ -32,6 +32,9 @@ async function search() {
 
 <template>
   <div>
+    <header class="header">
+      <h2 class="header__subtitle">Your handy recipes library</h2>
+    </header>
     <section>
       <form v-on:submit.prevent="search" class='search-field'>
         <div class="field">
@@ -56,6 +59,21 @@ async function search() {
 
 <style lang="scss" scoped>
 @import '../styles/variables';
+
+
+.header {
+  text-align: center;
+  color: $black;
+
+  &__title {
+    font-size: $title;
+    font-weight: 300;
+  }
+
+  &__subtitle {
+    font-size: $subsubheading;
+  }
+}
 
 .search-field {
   display: flex;

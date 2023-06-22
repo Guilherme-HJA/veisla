@@ -141,7 +141,7 @@ fieldset {
 
   width: auto;
 
-  max-height: 200px;
+  max-height: 250px;
 
   overflow-y: scroll;
 
