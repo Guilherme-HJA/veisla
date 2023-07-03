@@ -12,10 +12,10 @@ export default {
           <figure class="image">
             <img :src="meal.strMealThumb" alt="image">
           </figure>
-        </div>
+        </div> <!-- card__image -->
         <h3> {{ meal.strMeal }} </h3>
-      </div>
-    </div>
+      </div> <!-- card__header -->
+    </div> <!-- card -->
   </router-link>
 </template>
 

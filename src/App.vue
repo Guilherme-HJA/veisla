@@ -7,7 +7,7 @@
     <main>
       <div class="nav">
         <figure class="nav__image logo">
-          <a href="/"><img src="./assets/logo.png" alt="veisla_logo"></a>
+          <router-link class="logo__link" to="/"><img src="./assets/logo.png" alt="veisla_logo"></router-link>
         </figure>
         <div class="nav__links">
           <router-link to='/ingredients'>
@@ -28,7 +28,7 @@
     <footer>
       <strong>VEISLA</strong> by
       <a href="https://github.com/Guilherme-HJA"> Guilherme Araujo </a>,
-      is made under MIT License. <br>
+      is made under <a href="https://opensource.org/licenses/mit-license.php">MIT License.</a> <br>
       Source code can be found on <a href="https://github.com/Guilherme-HJA/veisla">Github.</a>
     </footer>
   </div>
@@ -41,6 +41,12 @@
   margin: 0;
   padding: 0;
   font-family: $main-font;
+}
+
+.logo {
+  &__link {
+    border-bottom: none !important;
+  }
 }
 
 .main {

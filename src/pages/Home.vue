@@ -7,9 +7,11 @@ const mealQuery = ref('');
 const queryList = ref([]);
 const name = ref('');
 
+
+/**
+ * Utilizes the searchMeal function from the search.js file
+ */
 async function search() {
-
-
   await new Promise(resolve => setTimeout(resolve, 1000))
   const query = await searchMeal(mealQuery)
 
@@ -40,7 +42,7 @@ async function search() {
         <div class="field">
           <input type="text" class="search-input" placeholder="Search your meal here..." v-model="mealQuery">
           <button type="submit">Search</button>
-        </div>
+        </div> <!-- field -->
       </form>
     </section>
     <section>

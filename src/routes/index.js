@@ -30,6 +30,13 @@ const routes = [
     component: MealPage,
     props: true,
     beforeEnter: (to, from, next) => {
+      /**
+       * Verifies if the URL is valid
+       * If valid, calls the next page, otherwise throwing an 404.
+       *
+       * @param {Number} param the MealID
+       * @returns {Boolean}
+       */
       function isValidID(param) {
         const id = parseInt(param);
 

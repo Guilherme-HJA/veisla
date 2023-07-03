@@ -18,6 +18,8 @@ export default {
 
   created() {
     this.$watch(
+      //Watches the change on the URL and resend the request based
+      //on the params (if modified)
       () => this.$route.params,
       () => {
         this.loadTypeList()
@@ -27,6 +29,10 @@ export default {
   },
 
   methods: {
+    /**
+     * Gets all list options based on the ['type'] prop
+     */
+
     async loadTypeList() {
       const data = await getData(this.listType.charAt(0))
 
@@ -100,7 +106,7 @@ export default {
         </div>
       </div>
     </section>
-    <!-- Meal Cards Space -->
+    <!-- End Meal Cards Space -->
   </div>
 </template>
 

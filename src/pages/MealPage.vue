@@ -8,13 +8,25 @@ const props = defineProps({
 });
 
 const meal = ref({})
+const mealInstructions = ref([''])
 const requirements = ref([])
 const contentLoaded = ref(false)
 
+
+/**
+ * Gets the meal data based on the mealID prop selected previously by the user
+ */
 onBeforeMount(async () => {
   meal.value = await getMealById(props.mealID)
 
+  //For some reason all the ingredients and measurenents
+  //have their own key:value pair
+  //This loop aims to get all non-empty elements and sort the on a new
+  //Array of Objects {ingredient : measurenent}, for better understanding.
+
   for (let i = 1; i <= 20; i++) {
+    //20 is the fixed value on the API
+
     let ingredient = meal.value['strIngredient' + i]
     let measurement = meal.value['strMeasure' + i]
 
@@ -26,8 +38,15 @@ onBeforeMount(async () => {
         measurement: measurement
       })
     }
+
+    //All instructions appear unformatted and altogether when redered alone
+    //This separates the text using the value present on all of then, that
+    //after are looped for a better view in the page
+    mealInstructions.value = meal.value.strInstructions.split('\r\n')
+
   }
 
+  //Sets the visibility of the wrapper element
   contentLoaded.value = true
 })
 
@@ -56,7 +75,7 @@ onBeforeMount(async () => {
         <div class="container__heading">
           <div class="meal-image">
             <figure class="image">
-              <img :src="meal.strMealThumb" :alt="meal.strMeal">
+              <img :src="meal.strMealThumb" :alt="meal.strMeal" />
             </figure>
           </div>
           <div class="meal-details">
@@ -66,7 +85,7 @@ onBeforeMount(async () => {
               <h2> Area </h2>
               <p> {{ meal.strArea }} </p>
             </div>
-            <hr>
+            <hr />
             <div class="meal-details__ingredients">
               <details>
                 <summary>Ingredients</summary>
@@ -77,18 +96,18 @@ onBeforeMount(async () => {
                 </ul>
               </details>
             </div>
-          </div>
-        </div>
+          </div> <!-- meal-details -->
+        </div> <!-- container__heading -->
         <div class="container__content">
           <div class="meal-instructions">
             <h3>INSTRUCTIONS</h3>
-            <p>
-              {{ meal.strInstructions }}
+            <p v-for="text in mealInstructions">
+              {{ text }} <br />
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </div> <!-- meal-instructions -->
+        </div> <!-- container__content -->
+      </div> <!-- container -->
+    </div> <!-- wrapper -->
   </div>
 </template>
 
@@ -241,6 +260,10 @@ li {
     text-align: justify;
 
     border-left: 3px solid $orange;
+
+    &::first-letter {
+      font-size: $text + 0.50;
+    }
   }
 }
 
