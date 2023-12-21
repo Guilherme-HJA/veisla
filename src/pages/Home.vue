@@ -52,7 +52,7 @@ async function search() {
           Meals starting with the letter "{{ name }}"
         </h1>
       </div>
-      <div class="container" v-if="queryList.value !== []">
+      <div class="container" v-if="queryList.value != []">
         <FoodCard v-for='item in queryList' :key="item.idMeal" :meal='item' />
       </div>
     </section>

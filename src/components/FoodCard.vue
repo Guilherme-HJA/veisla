@@ -6,16 +6,19 @@ export default {
 
 <template>
   <router-link :to="'/meals/' + meal.idMeal">
-    <div class="card">
-      <div class="card__header">
-        <div class="card__image">
-          <figure class="image">
-            <img :src="meal.strMealThumb" alt="image">
+    <div class=card>
+      <div class="card__content">
+        <div class="image">
+          <figure>
+            <img :src="meal.strMealThumb" :alt="meal.strMeal">
           </figure>
-        </div> <!-- card__image -->
-        <h3> {{ meal.strMeal }} </h3>
-      </div> <!-- card__header -->
-    </div> <!-- card -->
+        </div>
+        <div class="details">
+          <h3> {{ meal.strMeal }} </h3>
+          <h4 v-if="meal.strCategory != null"> {{ meal.strCategory }} | {{ meal.strArea }}</h4>
+        </div>
+      </div>
+    </div>
   </router-link>
 </template>
 
@@ -33,115 +36,98 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  gap: 6px;
+  position: relative;
 
-  text-align: center;
+  width: 400px;
+  height: auto;
 
-  border-radius: 10px;
-
-  width: 350px;
-
-  padding: 10px;
-
-  transition: all 1s ease;
+  transition: all 0.7s ease;
 
   &:hover {
     scale: 1.1;
-    transition: all 1s ease;
-    background: #e0e0e0;
-    box-shadow: 12px 12px 24px #afafaf, -12px -12px 24px #ffffff;
   }
 
-  &:hover &__image .image img {
-    transform: scale(1.1);
-    transition: transform 1s ease;
-  }
+  &:hover &__content {
+    .image figure img {
+      filter: brightness(70%);
+      transform: scale(1.07);
+      -webkit-filter: brightness(70%);
+    }
 
-  &__header {
-    border-radius: 5px;
-
-    h3 {
-      margin-top: 4px;
-      font-size: 2.0rem;
-      color: $black;
+    .details {
+      opacity: 1;
     }
   }
 
-  &__image {
+  &__content {
+
+    border-radius: 10px;
+    overflow: hidden;
+
     .image {
-      overflow: hidden;
-      border-radius: 7px;
 
-      img {
-        max-width: 100%;
-        height: auto;
-        transition: transform 0.50s ease-in;
-      }
-    }
-  }
+      figure {
+        overflow: hidden;
 
-  &__buttons {
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: center;
+        img {
+          -webkit-transition: all 1s ease;
+          -moz-transition: all 1s ease;
+          -o-transition: all 1s ease;
+          -ms-transition: all 1s ease;
+          transition: all 1s ease;
 
-    button {
-      padding: 5px 30px;
-
-      border: none;
-      border-radius: 20px;
-
-      cursor: pointer;
-
-      &.button-view {
-        font-size: 1.6rem;
-        font-weight: 600;
-
-        color: $orange;
-        background: none;
-        transition: background-color 0.30s ease;
-
-        &:hover {
-          background-color: $orange;
-          color: $white;
-          transition: background-color 0.30s ease, color 0.10s ease;
+          max-width: 100%;
+          height: auto;
         }
       }
     }
+
+    .details {
+
+      transition: all 1s ease;
+      -webkit-transition: all 1s ease;
+      color: $white;
+
+      box-sizing: border-box;
+      position: absolute;
+
+      bottom: 12px;
+      margin-left: 1em;
+
+      opacity: 0;
+
+      h3 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+
+        font-size: 1.7rem;
+      }
+
+      h4 {
+        font-size: 1.3rem;
+        font-weight: 400;
+      }
+    }
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $large) {
   .card {
     width: 350px;
-    background: $white;
-    padding: 0;
 
-    box-shadow: $shadow-mobile;
-  }
-}
 
-@media screen and (min-width: 480px) and (max-width: 768px) {
-  .card {
-    padding: 0;
+    &__content {
+      .image figure img {
+        filter: brightness(80%);
+        -webkit-filter: brightness(80%);
+      }
 
-    background: $white;
-    box-shadow: $shadow-mobile;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  .card {
-    padding: 0;
-
-    background: $white;
-    box-shadow: $shadow-mobile;
+      .details {
+        opacity: 1;
+      }
+    }
   }
 }
 </style>

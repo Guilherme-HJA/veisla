@@ -101,7 +101,7 @@ export default {
             {{ itemName }}
           </h1>
         </div>
-        <div class="foodcards-container" v-if="mealsList !== []">
+        <div class="foodcards-container" v-if="mealsList != []">
           <FoodCard v-for="item in mealsList" :key="item.idMeal" :meal="item" />
         </div>
       </div>
