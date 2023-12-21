@@ -68,7 +68,7 @@ Then:
 vite
 ```
 
-After that follow the port informed in your terminal in your prefered browser, and Voilà, or should I say Veisla?
+After that, follow the port informed in your terminal in your prefered browser, and Voilà, or should I say Veisla?
 
 Just like this:
 
