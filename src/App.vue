@@ -1,5 +1,5 @@
 <script setup>
-
+import Footer from "./components/Footer.vue";
 </script>
 
 <template>
@@ -25,12 +25,7 @@
         </transition>
       </router-view>
     </main>
-    <footer>
-      <strong>VEISLA</strong> by
-      <a href="https://github.com/Guilherme-HJA"> Guilherme Araujo </a>,
-      is made under <a href="https://opensource.org/licenses/mit-license.php">MIT License.</a> <br>
-      Source code can be found on <a href="https://github.com/Guilherme-HJA/veisla">Github.</a>
-    </footer>
+    <Footer />
   </div>
 </template>
 
@@ -95,27 +90,6 @@
 
 a.router-link-active {
   border-bottom: 2px solid $orange;
-}
-
-footer {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-
-  width: 100%;
-  height: 10px;
-
-  text-align: center;
-
-  font-size: 1.1rem;
-
-  padding-top: 3em 0;
-
-  a {
-    text-decoration: none;
-    color: $orange;
-  }
-
 }
 
 @media screen and (max-width: 480px) {

@@ -83,14 +83,12 @@ onBeforeMount(async () => {
             </div>
             <hr />
             <div class="meal-details__ingredients">
-              <details>
-                <summary>Ingredients</summary>
-                <ul>
-                  <li v-for="item in requirements">
-                    {{ item.ingredient }}: <span>{{ item.measurement }}</span>
-                  </li>
-                </ul>
-              </details>
+              <h2>Ingredients</h2>
+              <ul>
+                <li v-for="item in requirements">
+                  {{ item.ingredient }}: <span>{{ item.measurement }}</span>
+                </li>
+              </ul>
             </div>
           </div> <!-- meal-details -->
         </div> <!-- container__heading -->
@@ -155,12 +153,11 @@ li {
 
 .container {
   &__heading {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-
-    column-gap: 3em;
-
     margin: 2em;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    gap: 2em;
   }
 
   &__content {
@@ -168,18 +165,22 @@ li {
   }
 }
 
-.image {
-  overflow: hidden;
 
-  img {
-    border-radius: 10px;
+.meal-image {
+  .image {
 
-    max-width: 100%;
-    height: auto;
+    img {
+      border-radius: 10px;
+
+      max-width: 100%;
+      height: auto;
+    }
   }
 }
 
 .meal-details {
+
+  width: 50%;
 
   hr {
     margin: 2em;
@@ -197,33 +198,8 @@ li {
   }
 
   &__ingredients {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: scroll;
-
-    details {
-      summary {
-        cursor: pointer;
-        font-size: $subsubheading;
-
-        position: relative;
-        z-index: 10;
-      }
-
-      @keyframes show {
-        from {
-          margin-bottom: -80%;
-          opacity: 0;
-          transform: translateY(-100%);
-        }
-      }
-
-      &>*:not(summary) {
-        animation: show 0.5s ease-in-out;
-        z-index: 1;
-        transition: all 0.3s ease-in-out;
-        overflow: hidden;
-      }
-    }
 
     ul {
       margin-top: .75em;
@@ -263,7 +239,7 @@ li {
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $xsmall) {
   .back {
     display: none;
   }
@@ -274,14 +250,17 @@ li {
 
   .container {
     &__heading {
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-
-      column-gap: 0;
-      margin: 1em;
+      margin: 2em;
+      display: flex;
+      flex-direction: column;
+      align-content: center;
+      align-items: center;
+      gap: 2em;
     }
   }
 
   .meal-details {
+    width: 100%;
     text-align: center;
 
     ul {
@@ -306,10 +285,10 @@ li {
   }
 }
 
-@media screen and (min-width: 480px) and (max-width: 768px) {
+@media screen and (min-width: $xsmall) and (max-width: 768px) {
   .container {
     &__heading {
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      flex-direction: column;
     }
   }
 
@@ -324,6 +303,10 @@ li {
   .mealName {
     font-size: $subheading;
   }
+
+  .meal-details {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1127px) {
@@ -331,6 +314,16 @@ li {
     display: flex;
     align-content: center;
     justify-content: center;
+  }
+}
+
+.container {
+  &__heading {
+    flex-direction: column;
+  }
+
+  .meal-details {
+    width: 100%;
   }
 }
 

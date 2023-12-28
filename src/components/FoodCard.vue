@@ -50,9 +50,9 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
   &:hover &__content {
     .image figure img {
-      filter: brightness(70%);
+      filter: brightness(60%);
       transform: scale(1.07);
-      -webkit-filter: brightness(70%);
+      -webkit-filter: brightness(60%);
     }
 
     .details {
@@ -116,13 +116,13 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
 @media screen and (max-width: $large) {
   .card {
-    width: 350px;
+    width: 320px;
 
 
     &__content {
       .image figure img {
-        filter: brightness(80%);
-        -webkit-filter: brightness(80%);
+        filter: brightness(70%);
+        -webkit-filter: brightness(70%);
       }
 
       .details {

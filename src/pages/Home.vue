@@ -10,7 +10,7 @@ const name = ref('');
 
 //Utilizes the searchMeal function from the search.js file
 async function search() {
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  await new Promise(resolve => setTimeout(resolve, 500))
   const query = await searchMeal(mealQuery)
 
   console.log(query)
