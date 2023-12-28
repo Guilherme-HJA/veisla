@@ -2,13 +2,6 @@ import axios from "axios";
 
 const SEARCH = "https://www.themealdb.com/api/json/v1/1/search.php?";
 
-/**
- * Gets all data from the API based on used Input
- * It has a special method based of the length of the user input
- *
- * @param {String} query user input to be used in the search
- * @returns {Object[]} an array of objects containing all data based on the query
- */
 function searchMeal(query) {
   let URL;
 

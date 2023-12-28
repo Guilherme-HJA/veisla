@@ -15,6 +15,7 @@ export default {
         </div>
         <div class="details">
           <h3> {{ meal.strMeal }} </h3>
+          <!--This is for the lists navigation, in the API those requests don't return the meal Category nor the Area-->
           <h4 v-if="meal.strCategory != null"> {{ meal.strCategory }} | {{ meal.strArea }}</h4>
         </div>
       </div>

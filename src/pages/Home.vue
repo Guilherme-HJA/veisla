@@ -8,9 +8,7 @@ const queryList = ref([]);
 const name = ref('');
 
 
-/**
- * Utilizes the searchMeal function from the search.js file
- */
+//Utilizes the searchMeal function from the search.js file
 async function search() {
   await new Promise(resolve => setTimeout(resolve, 1000))
   const query = await searchMeal(mealQuery)

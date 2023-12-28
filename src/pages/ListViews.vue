@@ -29,9 +29,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Gets all list options based on the ['type'] prop
-     */
 
     async loadTypeList() {
       const data = await getData(this.listType.charAt(0))

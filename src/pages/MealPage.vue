@@ -12,10 +12,6 @@ const mealInstructions = ref([''])
 const requirements = ref([])
 const contentLoaded = ref(false)
 
-
-/**
- * Gets the meal data based on the mealID prop selected previously by the user
- */
 onBeforeMount(async () => {
   meal.value = await getMealById(props.mealID)
 
@@ -69,8 +65,8 @@ onBeforeMount(async () => {
             </a>
           </span>
         </h1>
-
       </header>
+
       <div class="container">
         <div class="container__heading">
           <div class="meal-image">
@@ -104,8 +100,8 @@ onBeforeMount(async () => {
             <p v-for="text in mealInstructions">
               {{ text }} <br />
             </p>
-          </div> <!-- meal-instructions -->
-        </div> <!-- container__content -->
+          </div>
+        </div>
       </div> <!-- container -->
     </div> <!-- wrapper -->
   </div>
