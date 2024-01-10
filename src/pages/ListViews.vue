@@ -1,19 +1,19 @@
 <script>
-import getMeals from '../api/filter.js'
-import getData from '../api/list.js'
-import FoodCard from '../components/FoodCard.vue'
+import getMeals from "../api/filter.js";
+import getData from "../api/list.js";
+import FoodCard from "../components/FoodCard.vue";
 
 export default {
-  props: ['type'],
+  props: ["type"],
 
   data() {
     return {
       listType: this.type,
       listData: null,
       contentLoaded: false,
-      itemName: '',
-      mealsList: []
-    }
+      itemName: "",
+      mealsList: [],
+    };
   },
 
   created() {
@@ -22,73 +22,101 @@ export default {
       //on the params (if modified)
       () => this.$route.params,
       () => {
-        this.loadTypeList()
+        this.loadTypeList();
       },
-      { immediate: true }
-    )
+      { immediate: true },
+    );
   },
 
   methods: {
-
     async loadTypeList() {
-      const data = await getData(this.listType.charAt(0))
+      const data = await getData(this.listType.charAt(0));
 
-      this.listData = data
+      this.listData = data;
     },
 
     async fetchMeals(type, item) {
       const data = await getMeals(type, item);
 
       if (data === null) {
-        this.itemName = "Hm... Nothing here..."
-        this.mealsList = []
-        this.contentLoaded = true
-      }
-
-      else {
-        this.mealsList = data
-        this.itemName = item.toUpperCase()
-        this.contentLoaded = true
+        this.itemName = "Hm... Nothing here...";
+        this.mealsList = [];
+        this.contentLoaded = true;
+      } else {
+        this.mealsList = data;
+        this.itemName = item.toUpperCase();
+        this.contentLoaded = true;
       }
     },
   },
   components: {
-    FoodCard
-  }
-}
+    FoodCard,
+  },
+};
 </script>
 
 <template>
   <div>
     <section :class="{ loading: listData === null, loaded: listData !== null }">
       <fieldset>
-        <legend> {{ listType.toUpperCase() }} </legend>
+        <legend>{{ listType.toUpperCase() }}</legend>
         <div class="list-container">
           <!-- For ingredients -->
-          <div class="card" v-if="listType === 'ingredients'" v-for="item in listData">
-            <input type="radio" name="ingRadio" :value="item.strIngredient" :id="item.strIngredient" />
-            <label :for="item.strIngredient" @click="fetchMeals('i', item.strIngredient)">
+          <div
+            class="card"
+            v-if="listType === 'ingredients'"
+            v-for="item in listData"
+          >
+            <input
+              type="radio"
+              name="ingRadio"
+              :value="item.strIngredient"
+              :id="item.strIngredient"
+            />
+            <label
+              :for="item.strIngredient"
+              @click="fetchMeals('i', item.strIngredient)"
+            >
               {{ item.strIngredient }}
             </label>
           </div>
           <!-- For Categories -->
-          <div class="card" v-else-if="listType === 'categories'" v-for="item in listData">
-            <input type="radio" name="catRadio" :value="item.strCategory" :id="item.strCategory" />
-            <label :for="item.strCategory" @click="fetchMeals('c', item.strCategory)">
-              {{ item.strCategory }} </label>
+          <div
+            class="card"
+            v-else-if="listType === 'categories'"
+            v-for="item in listData"
+          >
+            <input
+              type="radio"
+              name="catRadio"
+              :value="item.strCategory"
+              :id="item.strCategory"
+            />
+            <label
+              :for="item.strCategory"
+              @click="fetchMeals('c', item.strCategory)"
+            >
+              {{ item.strCategory }}
+            </label>
           </div>
           <!-- For Areas -->
           <div class="card" v-else v-for="item in listData">
-            <input type="radio" name="areRadio" :value="item.strArea" :id="item.strArea" />
+            <input
+              type="radio"
+              name="areRadio"
+              :value="item.strArea"
+              :id="item.strArea"
+            />
             <label :for="item.strArea" @click="fetchMeals('a', item.strArea)">
-              {{ item.strArea }} </label>
+              {{ item.strArea }}
+            </label>
           </div>
         </div>
       </fieldset>
     </section>
     <!-- End of Items List Space-->
     <!-- Meal Cards Space -->
-    <section v-if='contentLoaded'>
+    <section v-if="contentLoaded">
       <div class="cards-wrapper">
         <div class="cards-wrapper__heading">
           <span class="return" @click="contentLoaded = !contentLoaded">
@@ -108,7 +136,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/variables';
+@import "../styles/variables";
 
 * {
   margin: 0;
@@ -132,9 +160,7 @@ fieldset {
   }
 }
 
-
 .list-container {
-
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
@@ -152,7 +178,6 @@ fieldset {
   padding: 1em;
 
   .card {
-
     width: 200px;
 
     padding: 1em;
@@ -164,7 +189,7 @@ fieldset {
       height: 0;
       width: 0;
 
-      &:checked+label {
+      &:checked + label {
         border-radius: 3px;
         background-color: $orange;
         color: $white;
@@ -174,7 +199,6 @@ fieldset {
     }
 
     label {
-
       cursor: pointer;
 
       font-size: 1.3rem;
@@ -187,7 +211,6 @@ fieldset {
       color: $orange;
 
       transition: all 0.5s ease;
-
     }
   }
 }
@@ -204,7 +227,7 @@ fieldset {
     margin-top: 1em;
 
     .item-name {
-
+      text-align: center;
       color: $black;
       font-size: $heading;
     }
@@ -223,7 +246,6 @@ fieldset {
 }
 
 .foodcards-container {
-
   margin: 2em;
   padding: 2em;
 
@@ -245,6 +267,19 @@ fieldset {
 }
 
 @media screen and (max-width: 480px) {
+  .cards-wrapper {
+    &__heading {
+      .item-name {
+        font-size: 2.5em;
+      }
+
+      .return {
+        display: none;
+        margin-right: 0.5em;
+      }
+    }
+  }
+
   .foodcards-container {
     margin: 1em;
     padding: 0;
