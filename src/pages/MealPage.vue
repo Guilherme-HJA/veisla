@@ -140,11 +140,11 @@ summary {
   cursor: pointer;
 
   &.back {
-    margin-right: 1em;
+    margin-right: 0.5em;
   }
 
   &.youtube {
-    margin-left: 1em;
+    margin-left: 0.5em;
   }
 }
 
@@ -154,7 +154,7 @@ li {
 
 .mealName {
   text-align: center;
-  font-size: $title;
+  font-size: 5rem;
   margin-top: 1em;
 
   text-transform: uppercase;
@@ -257,8 +257,43 @@ li {
   }
 }
 
+@media screen and (max-width: $large) {
+  .youtube {
+    display: none;
+  }
+}
+
+@media screen and (min-width: $medium) and (max-width: $medium) {
+  .back,
+  .youtube {
+    display: none;
+  }
+  .mealName {
+    font-size: 4rem;
+  }
+}
+
+@media screen and (min-width: $xsmall) and (max-width: $small) {
+  .back,
+  .youtube {
+    display: none;
+  }
+
+  .mealName {
+    font-size: 4rem;
+  }
+
+  .container {
+    .heading {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+}
+
 @media screen and (max-width: $xsmall) {
-  .back {
+  .back,
+  .youtube {
     display: none;
   }
 
@@ -268,8 +303,9 @@ li {
 
   .container {
     .heading {
-      text-align: center;
       flex-direction: column;
+      text-align: center;
+
       .meal-info {
         h2 {
           font-size: 3em;
