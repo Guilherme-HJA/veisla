@@ -1,6 +1,6 @@
 <script>
-import getMeals from "../api/filter.js";
-import getData from "../api/list.js";
+import filter from "../api/filter.js";
+import getLists from "../api/list.js";
 import FoodCard from "../components/FoodCard.vue";
 
 export default {
@@ -30,13 +30,13 @@ export default {
 
   methods: {
     async loadTypeList() {
-      const data = await getData(this.listType.charAt(0));
+      const data = await getLists(this.listType.charAt(0));
 
       this.listData = data;
     },
 
     async fetchMeals(type, item) {
-      const data = await getMeals(type, item);
+      const data = await filter(type, item);
 
       if (data === null) {
         this.itemName = "Hm... Nothing here...";

@@ -1,31 +1,54 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import searchMeal from '../api/search.js';
+import randomMeal from '../api/random.js';
 import FoodCard from '../components/FoodCard.vue';
 
 const mealQuery = ref('');
 const queryList = ref([]);
 const name = ref('');
-
+const randomMeals = ref([])
+const randomLoad = ref(false)
+const mainLoad = ref(false)
 
 //Utilizes the searchMeal function from the search.js file
 async function search() {
+  randomLoad.value = false
+  mainLoad.value = false
   await new Promise(resolve => setTimeout(resolve, 500))
-  const query = await searchMeal(mealQuery)
+  
+  if (mealQuery.value !== '') {
+    const query = await searchMeal(mealQuery)
 
-  console.log(query)
+    if (query === null) {
+      queryList.value = []
+      name.value = 'Hm... Nothing here'
+      mealQuery.value = ''
+    }
+  
+    else {
+      queryList.value = query
+      name.value = mealQuery.value.toUpperCase()
+      mealQuery.value = ''
+      mainLoad.value = true
+    }
+  }
+}
 
-  if (query === null) {
-    queryList.value = []
-    name.value = 'Hm... Nothing here'
-    mealQuery.value = ''
+onMounted(() => 
+  getRandomMeals()
+)
+
+async function getRandomMeals() {
+  await new Promise(resolve => setTimeout(resolve, 500))
+  const meals = []
+  for (let i = 0; i < 4; i++) {
+    const response = await randomMeal();
+    meals.push(response)
   }
 
-  else {
-    queryList.value = query
-    name.value = mealQuery.value.toUpperCase()
-    mealQuery.value = ''
-  }
+  randomMeals.value = meals
+  randomLoad.value = !randomLoad.value
 }
 
 </script>
@@ -33,7 +56,7 @@ async function search() {
 <template>
   <div>
     <header class="header">
-      <h2 class="header__subtitle">Your handy recipes library</h2>
+      <h2 class="header__title">Your handy recipes library</h2>
     </header>
     <section>
       <form v-on:submit.prevent="search" class='search-field'>
@@ -44,7 +67,7 @@ async function search() {
       </form>
     </section>
     <section>
-      <div v-if="name.length !== 0">
+      <div :class="{ 'main-active': mainLoad, 'inactive' : !mainLoad }" v-if="name.length !== 0">
         <h1 class="meal-name" v-if="name.length > 1">{{ name }}</h1>
         <h1 class="meal-name" v-else>
           Meals starting with the letter "{{ name }}"
@@ -52,6 +75,16 @@ async function search() {
       </div>
       <div class="container" v-if="queryList.value != []">
         <FoodCard v-for='item in queryList' :key="item.idMeal" :meal='item' />
+      </div>
+    </section>
+    <section>
+      <div class="random-meals" :class="{ 'random-active' : randomLoad } " v-if="randomLoad">
+        <div class="caption">
+          <h1>If you are unsure of what to search, we have some suggestions</h1>
+        </div>
+        <div class="random container">
+          <FoodCard v-for='item in randomMeals' :key="item.idMeal" :meal="item" />
+        </div>
       </div>
     </section>
   </div>
@@ -66,12 +99,7 @@ async function search() {
   color: $black;
 
   &__title {
-    font-size: $title;
-    font-weight: 300;
-  }
-
-  &__subtitle {
-    font-size: $subsubheading;
+    font-size: $heading;
   }
 }
 
@@ -123,6 +151,48 @@ async function search() {
   font-size: $heading;
   text-align: center;
   margin: 0.50em 0;
+}
+
+.random-meals {
+  margin: 1em;
+  padding: 1em;
+
+  .caption {
+    text-align: center;
+    color: $black;
+    font-size: 2rem;
+  }
+}
+
+.random-active {
+  animation: fadeIn 2s forwards;
+}
+
+.main-active {
+  animation: fadeIn 2s forwards;
+}
+
+.inactive {
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 100;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .container {
