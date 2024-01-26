@@ -1,56 +1,51 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import searchMeal from '../api/search.js';
-import randomMeal from '../api/random.js';
-import FoodCard from '../components/FoodCard.vue';
+import { onMounted, ref } from "vue";
+import searchMeal from "../api/search.js";
+import randomMeal from "../api/random.js";
+import FoodCard from "../components/FoodCard.vue";
 
-const mealQuery = ref('');
+const mealQuery = ref("");
 const queryList = ref([]);
-const name = ref('');
-const randomMeals = ref([])
-const randomLoad = ref(false)
-const mainLoad = ref(false)
+const name = ref("");
+const randomMeals = ref([]);
+const randomLoad = ref(false);
+const mainLoad = ref(false);
 
 //Utilizes the searchMeal function from the search.js file
 async function search() {
-  randomLoad.value = false
-  mainLoad.value = false
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  if (mealQuery.value !== '') {
-    const query = await searchMeal(mealQuery)
+  randomLoad.value = false;
+  mainLoad.value = false;
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  if (mealQuery.value !== "") {
+    const query = await searchMeal(mealQuery);
 
     if (query === null) {
-      queryList.value = []
-      name.value = 'Hm... Nothing here'
-      mealQuery.value = ''
-    }
-  
-    else {
-      queryList.value = query
-      name.value = mealQuery.value.toUpperCase()
-      mealQuery.value = ''
-      mainLoad.value = true
+      queryList.value = [];
+      name.value = "Hm... Nothing here";
+      mealQuery.value = "";
+    } else {
+      queryList.value = query;
+      name.value = mealQuery.value.toUpperCase();
+      mealQuery.value = "";
+      mainLoad.value = true;
     }
   }
 }
 
-onMounted(() => 
-  getRandomMeals()
-)
+onMounted(() => getRandomMeals());
 
 async function getRandomMeals() {
-  await new Promise(resolve => setTimeout(resolve, 500))
-  const meals = []
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const meals = [];
   for (let i = 0; i < 4; i++) {
     const response = await randomMeal();
-    meals.push(response)
+    meals.push(response);
   }
 
-  randomMeals.value = meals
-  randomLoad.value = !randomLoad.value
+  randomMeals.value = meals;
+  randomLoad.value = !randomLoad.value;
 }
-
 </script>
 
 <template>
@@ -59,31 +54,48 @@ async function getRandomMeals() {
       <h2 class="header__title">Your handy recipes library</h2>
     </header>
     <section>
-      <form v-on:submit.prevent="search" class='search-field'>
+      <form v-on:submit.prevent="search" class="search-field">
         <div class="field">
-          <input type="text" class="search-input" placeholder="Search your meal here..." v-model="mealQuery">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search your meal here..."
+            v-model="mealQuery"
+          />
           <button type="submit">Search</button>
-        </div> <!-- field -->
+        </div>
+        <!-- field -->
       </form>
     </section>
     <section>
-      <div :class="{ 'main-active': mainLoad, 'inactive' : !mainLoad }" v-if="name.length !== 0">
+      <div
+        :class="{ 'main-active': mainLoad, inactive: !mainLoad }"
+        v-if="name.length !== 0"
+      >
         <h1 class="meal-name" v-if="name.length > 1">{{ name }}</h1>
         <h1 class="meal-name" v-else>
           Meals starting with the letter "{{ name }}"
         </h1>
       </div>
       <div class="container" v-if="queryList.value != []">
-        <FoodCard v-for='item in queryList' :key="item.idMeal" :meal='item' />
+        <FoodCard v-for="item in queryList" :key="item.idMeal" :meal="item" />
       </div>
     </section>
     <section>
-      <div class="random-meals" :class="{ 'random-active' : randomLoad } " v-if="randomLoad">
+      <div
+        class="random-meals"
+        :class="{ 'random-active': randomLoad }"
+        v-if="randomLoad"
+      >
         <div class="caption">
           <h1>If you are unsure of what to search, we have some suggestions</h1>
         </div>
         <div class="random container">
-          <FoodCard v-for='item in randomMeals' :key="item.idMeal" :meal="item" />
+          <FoodCard
+            v-for="item in randomMeals"
+            :key="item.idMeal"
+            :meal="item"
+          />
         </div>
       </div>
     </section>
@@ -91,8 +103,7 @@ async function getRandomMeals() {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/variables';
-
+@import "../styles/variables";
 
 .header {
   text-align: center;
@@ -150,7 +161,7 @@ async function getRandomMeals() {
 .meal-name {
   font-size: $heading;
   text-align: center;
-  margin: 0.50em 0;
+  margin: 0.5em 0;
 }
 
 .random-meals {
@@ -169,18 +180,18 @@ async function getRandomMeals() {
 }
 
 .main-active {
-  animation: fadeIn 2s forwards;
+  animation: fadeIn 1s forwards;
 }
 
 .inactive {
-  animation: fadeOut 2s forwards;
+  animation: fadeOut 1s forwards;
 }
 
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
-  
+
   100% {
     opacity: 100;
   }
@@ -207,16 +218,18 @@ async function getRandomMeals() {
   row-gap: 3em;
 }
 
-@media screen and (max-width: $xsmall) {
-  .container {
+@media screen and (max-width: 480px) {
+  .container,
+  .random {
     margin: 1em;
     padding: 1em;
 
     align-self: center;
+    justify-items: center;
 
     row-gap: 3em;
 
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 
   .search-field {
@@ -238,6 +251,12 @@ async function getRandomMeals() {
       }
     }
   }
+}
 
+@media (min-width: 480px) and (max-width: 720px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    align-self: center;
+  }
 }
 </style>

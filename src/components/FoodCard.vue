@@ -1,22 +1,24 @@
 <script>
 export default {
-  props: ['meal'],
-}
+  props: ["meal"],
+};
 </script>
 
 <template>
   <router-link :to="'/meals/' + meal.idMeal">
-    <div class=card>
+    <div class="card">
       <div class="card__content">
         <div class="image">
           <figure>
-            <img :src="meal.strMealThumb" :alt="meal.strMeal">
+            <img :src="meal.strMealThumb" :alt="meal.strMeal" />
           </figure>
         </div>
         <div class="details">
-          <h3> {{ meal.strMeal }} </h3>
+          <h3>{{ meal.strMeal }}</h3>
           <!--This is for the lists navigation, in the API those requests don't return the meal Category nor the Area-->
-          <h4 v-if="meal.strCategory != null"> {{ meal.strCategory }} | {{ meal.strArea }}</h4>
+          <h4 v-if="meal.strCategory != null">
+            {{ meal.strCategory }} | {{ meal.strArea }}
+          </h4>
         </div>
       </div>
     </div>
@@ -24,10 +26,9 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/variables';
+@import "../styles/variables";
 
 $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
-
 
 * {
   font-family: $main-font;
@@ -61,12 +62,10 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   }
 
   &__content {
-
     border-radius: 10px;
     overflow: hidden;
 
     .image {
-
       figure {
         overflow: hidden;
 
@@ -84,7 +83,6 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
     }
 
     .details {
-
       transition: all 1s ease;
       -webkit-transition: all 1s ease;
       color: $white;
@@ -118,7 +116,6 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   .card {
     width: 320px;
 
-
     &__content {
       .image figure img {
         filter: brightness(70%);
@@ -129,6 +126,24 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
         opacity: 1;
       }
     }
+  }
+}
+
+@media screen and (max-width: $big) {
+  .card {
+    width: 390px;
+  }
+}
+
+@media screen and (max-width: 1000px) and (min-width: $medium) {
+  .card {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .card {
+    width: 300px;
   }
 }
 </style>

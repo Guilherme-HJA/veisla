@@ -154,7 +154,7 @@ li {
 
 .mealName {
   text-align: center;
-  font-size: 5rem;
+  font-size: 4rem;
   margin-top: 1em;
 
   text-transform: uppercase;
@@ -193,12 +193,12 @@ li {
 
       h2 {
         text-transform: uppercase;
-        font-size: 4rem;
+        font-size: 3.5rem;
       }
 
       p {
         text-transform: uppercase;
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
     }
   }
@@ -298,7 +298,7 @@ li {
   }
 
   .mealName {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 
   .container {
@@ -343,9 +343,12 @@ li {
         }
 
         p {
+          padding: 0;
           font-size: $text;
           margin-bottom: 0.75em;
           word-break: break-all;
+
+          border: none;
 
           &::first-letter {
             font-size: $text + 0.25;
