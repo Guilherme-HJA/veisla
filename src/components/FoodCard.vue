@@ -46,7 +46,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   transition: all 0.7s ease;
 
   &:hover {
-    scale: 1.1;
+    scale: 1.05;
   }
 
   &:hover &__content {
@@ -99,7 +99,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 300px;
+        max-width: 250px;
 
         font-size: 1.7rem;
       }
@@ -144,6 +144,17 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 @media screen and (max-width: 420px) {
   .card {
     width: 300px;
+
+    &__content {
+      .details {
+        h3 {
+          font-size: $text-mobile;
+        }
+        h4 {
+          font-size: $text-mobile;
+        }
+      }
+    }
   }
 }
 </style>

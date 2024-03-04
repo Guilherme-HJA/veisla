@@ -18,7 +18,7 @@ div {
 
   width: 100%;
   height: 30px;
-  margin: 2em 0;
+  margin: 4em 0 0 0;
 
   position: relative;
   bottom: 0;
@@ -29,5 +29,11 @@ a {
   text-decoration: none;
 
   color: $orange;
+}
+
+@media screen and (max-width: 480px) {
+  div {
+    font-size: 0.9rem;
+  }
 }
 </style>

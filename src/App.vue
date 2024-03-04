@@ -1,36 +1,49 @@
 <script setup>
+import router from "./routes";
+import randomMeal from "./api/random";
 import Footer from "./components/Footer.vue";
+
+const getRandomMeal = async () => {
+  const response = await randomMeal();
+  router.push(`/meals/${response.idMeal}`);
+};
 </script>
 
 <template>
   <div class="main">
-    <main>
+    <header>
       <div class="nav">
         <figure class="nav__image logo">
-          <router-link class="logo__link" to="/"><img src="./assets/logo.png" alt="veisla_logo"></router-link>
+          <router-link class="logo__link" to="/"
+            ><img src="./assets/logo.png" alt="veisla_logo"
+          /></router-link>
         </figure>
         <div class="nav__links">
-          <router-link to='/ingredients'>
-            Ingredients</router-link> |
-          <router-link to='/'>Home</router-link> |
-          <router-link to='/categories'>Categories</router-link> |
-          <router-link to='/areas'>Areas</router-link>
+          <a @click="getRandomMeal()">Surprise Me</a>
+          | <router-link to="/ingredients"> Ingredients</router-link> |
+          <router-link to="/areas">Areas</router-link> |
+          <router-link to="/categories">Categories</router-link> |
+          <router-link to="/">Home</router-link>
         </div>
       </div>
-      <router-view v-slot="{ Component, route }">
-        <transition name="fade" mode="out-in">
-          <div :key="route.path">
-            <component :is="Component"></component>
-          </div>
-        </transition>
-      </router-view>
+    </header>
+    <main>
+      <section>
+        <router-view v-slot="{ Component, route }">
+          <transition name="fade" mode="out-in">
+            <div :key="route.path">
+              <component :is="Component"></component>
+            </div>
+          </transition>
+        </router-view>
+      </section>
     </main>
     <Footer />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import './styles/variables';
+@import "./styles/variables";
 
 * {
   margin: 0;
@@ -45,8 +58,8 @@ import Footer from "./components/Footer.vue";
 }
 
 .main {
-  position: relative;
-  min-height: 100vh;
+  min-width: 100%;
+  min-height: 100svh;
 }
 
 .nav {
@@ -86,6 +99,10 @@ import Footer from "./components/Footer.vue";
       height: 100px;
     }
   }
+}
+
+a {
+  cursor: pointer;
 }
 
 a.router-link-active {

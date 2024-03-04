@@ -221,15 +221,19 @@ async function getRandomMeals() {
 @media screen and (max-width: 480px) {
   .container,
   .random {
-    margin: 1em;
-    padding: 1em;
-
     align-self: center;
+    justify-content: center;
     justify-items: center;
+    align-content: center;
+    align-items: center;
 
     row-gap: 3em;
 
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .random-meals > .caption {
+    font-size: $text-mobile;
   }
 
   .search-field {
