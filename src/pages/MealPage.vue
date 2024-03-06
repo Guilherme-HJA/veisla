@@ -336,8 +336,10 @@ li {
           column-count: 1;
 
           li {
-            font-size: 1.5em;
-            margin: 0.5em 0;
+            p {
+              font-size: 1.5em;
+              margin: 0.5em 0;
+            }
           }
         }
       }
