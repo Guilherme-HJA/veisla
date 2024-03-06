@@ -10,7 +10,7 @@ const getRandomMeal = async () => {
 </script>
 
 <template>
-  <div class="main">
+  <div class="wrapper">
     <header>
       <div class="nav">
         <figure class="nav__image logo">
@@ -57,9 +57,15 @@ const getRandomMeal = async () => {
   }
 }
 
-.main {
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+main {
+  min-height: 100vh;
   min-width: 100%;
-  min-height: 100svh;
 }
 
 .nav {

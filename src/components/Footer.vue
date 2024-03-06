@@ -18,11 +18,6 @@ div {
 
   width: 100%;
   height: 30px;
-  margin: 4em 0 0 0;
-
-  position: relative;
-  bottom: 0;
-  left: 0;
 }
 
 a {

@@ -96,7 +96,9 @@ onBeforeMount(async () => {
             <h2>Ingredients</h2>
             <ul>
               <li v-for="item in requirements">
-                {{ item.ingredient }}: <span> {{ item.measurement }} </span>
+                <p v-if="item.ingredient !== null">
+                  {{ item.ingredient }}: <span> {{ item.measurement }} </span>
+                </p>
               </li>
             </ul>
           </div>
@@ -225,10 +227,13 @@ li {
         column-count: 2;
 
         li {
-          font-size: 2em;
+          p {
+            font-size: 2em;
 
-          span {
-            font-style: italic;
+            span {
+              color: $black2;
+              font-style: italic;
+            }
           }
         }
       }
@@ -307,6 +312,7 @@ li {
       text-align: center;
 
       .meal-info {
+        padding: 0;
         h2 {
           font-size: 3em;
         }
@@ -317,6 +323,7 @@ li {
     }
 
     .content {
+      align-items: center;
       .ingredients {
         h2 {
           text-align: center;
@@ -344,9 +351,8 @@ li {
 
         p {
           padding: 0;
-          font-size: $text;
+          font-size: $text-mobile;
           margin-bottom: 0.75em;
-          word-break: break-all;
 
           border: none;
 
