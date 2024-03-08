@@ -73,9 +73,7 @@ async function getRandomMeals() {
         v-if="name.length !== 0"
       >
         <h1 class="meal-name" v-if="name.length > 1">{{ name }}</h1>
-        <h1 class="meal-name" v-else>
-          Meals starting with the letter "{{ name }}"
-        </h1>
+        <h1 class="meal-name" v-else>Starting with '{{ name }}'</h1>
       </div>
       <div class="container" v-if="queryList.value != []">
         <FoodCard v-for="item in queryList" :key="item.idMeal" :meal="item" />
@@ -154,7 +152,9 @@ async function getRandomMeals() {
     padding: 5px 10px;
 
     color: $white;
-    background-color: $orange;
+    background-color: $darkorange;
+
+    cursor: pointer;
   }
 }
 
@@ -162,6 +162,7 @@ async function getRandomMeals() {
   font-size: $heading;
   text-align: center;
   margin: 0.5em 0;
+  color: $black;
 }
 
 .random-meals {
@@ -201,6 +202,7 @@ async function getRandomMeals() {
   0% {
     opacity: 100;
   }
+
   100% {
     opacity: 0;
   }

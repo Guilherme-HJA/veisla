@@ -76,7 +76,7 @@ onBeforeMount(async () => {
         <div class="heading">
           <div class="meal-image">
             <figure class="image">
-              <img :src="meal.strMealThumb" alt="meal.strMeal" />
+              <img loading="lazy" :src="meal.strMealThumb" alt="meal.strMeal" />
             </figure>
           </div>
           <div class="meal-info">
@@ -181,10 +181,19 @@ li {
     gap: 2em;
 
     .meal-image {
+      box-shadow: -3px 8px 21px 0px rgba(25, 25, 25, 0.71);
+      -webkit-box-shadow: -3px 8px 21px 0px rgba(25, 25, 25, 0.71);
+      -moz-box-shadow: -3px 8px 21px 0px rgba(25, 25, 25, 0.71);
+
+      border-radius: 15px;
       .image {
         img {
           border-radius: 10px;
+
           max-width: 100%;
+          max-height: auto;
+
+          width: 100%;
           height: auto;
         }
       }

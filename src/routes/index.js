@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "../pages/Home.vue";
-import ListViews from "../pages/ListViews.vue";
-import MealPage from "../pages/MealPage.vue";
-import NotFound from "../pages/NotFound.vue";
+const Home = () => import("../pages/Home.vue");
+const ListViews = () => import("../pages/ListViews.vue");
+const MealPage = () => import("../pages/MealPage.vue");
+const NotFound = () => import("../pages/NotFound.vue");
 
 const routes = [
   { path: "/", name: "Home", component: Home },

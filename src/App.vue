@@ -1,12 +1,19 @@
 <script setup>
-import router from "./routes";
+import { onMounted, ref } from "vue";
 import randomMeal from "./api/random";
 import Footer from "./components/Footer.vue";
 
-const getRandomMeal = async () => {
+const randomMealLink = ref("");
+
+async function getRandomMeal() {
   const response = await randomMeal();
-  router.push(`/meals/${response.idMeal}`);
-};
+
+  randomMealLink.value = `/meals/${response.idMeal}`;
+}
+
+onMounted(async () => {
+  getRandomMeal();
+});
 </script>
 
 <template>
@@ -15,11 +22,13 @@ const getRandomMeal = async () => {
       <div class="nav">
         <figure class="nav__image logo">
           <router-link class="logo__link" to="/"
-            ><img src="./assets/logo.png" alt="veisla_logo"
+            ><img src="./assets/logo.webp" alt="veisla_logo"
           /></router-link>
         </figure>
         <div class="nav__links">
-          <a @click="getRandomMeal()">Surprise Me</a>
+          <router-link @click="getRandomMeal" :to="randomMealLink"
+            >Surprise Me</router-link
+          >
           | <router-link to="/ingredients"> Ingredients</router-link> |
           <router-link to="/areas">Areas</router-link> |
           <router-link to="/categories">Categories</router-link> |

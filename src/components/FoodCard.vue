@@ -10,15 +10,21 @@ export default {
       <div class="card__content">
         <div class="image">
           <figure>
-            <img :src="meal.strMealThumb" :alt="meal.strMeal" />
+            <img
+              loading="lazy"
+              width="400"
+              height="400"
+              :src="meal.strMealThumb"
+              :alt="meal.strMeal"
+            />
           </figure>
         </div>
         <div class="details">
-          <h3>{{ meal.strMeal }}</h3>
+          <h1>{{ meal.strMeal }}</h1>
           <!--This is for the lists navigation, in the API those requests don't return the meal Category nor the Area-->
-          <h4 v-if="meal.strCategory != null">
+          <h2 v-if="meal.strCategory != null">
             {{ meal.strCategory }} | {{ meal.strArea }}
-          </h4>
+          </h2>
         </div>
       </div>
     </div>
@@ -45,14 +51,17 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
   transition: all 0.7s ease;
 
+  box-sizing: border-box;
+
+  overflow: hidden;
+
   &:hover {
-    scale: 1.05;
+    transform: scale(1.07);
   }
 
   &:hover &__content {
     .image figure img {
       filter: brightness(60%);
-      transform: scale(1.07);
       -webkit-filter: brightness(60%);
     }
 
@@ -62,22 +71,23 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   }
 
   &__content {
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 20px;
 
     .image {
       figure {
-        overflow: hidden;
-
         img {
+          border-radius: 20px;
           -webkit-transition: all 1s ease;
           -moz-transition: all 1s ease;
           -o-transition: all 1s ease;
           -ms-transition: all 1s ease;
           transition: all 1s ease;
 
-          max-width: 100%;
+          width: 100%;
           height: auto;
+
+          min-width: 100%;
+          min-height: auto;
         }
       }
     }
@@ -95,7 +105,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
       opacity: 0;
 
-      h3 {
+      h1 {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -104,7 +114,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
         font-size: 1.7rem;
       }
 
-      h4 {
+      h2 {
         font-size: 1.3rem;
         font-weight: 400;
       }
@@ -114,7 +124,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
 @media screen and (max-width: $large) {
   .card {
-    width: 320px;
+    width: 400px;
 
     &__content {
       .image figure img {
@@ -131,7 +141,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
 @media screen and (max-width: $big) {
   .card {
-    width: 390px;
+    width: 400px;
   }
 }
 
@@ -141,7 +151,7 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   }
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 480px) {
   .card {
     width: 300px;
 
