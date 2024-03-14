@@ -15,7 +15,6 @@
 div {
   text-align: center;
   font-size: 1.1rem;
-
   width: 100%;
   height: 30px;
 }
@@ -29,6 +28,13 @@ a {
 @media screen and (max-width: 480px) {
   div {
     font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  div {
+    position: relative;
+    bottom: -100px;
   }
 }
 </style>

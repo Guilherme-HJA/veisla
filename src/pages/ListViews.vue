@@ -1,137 +1,88 @@
-<script>
-import filter from "../api/filter.js";
-import getLists from "../api/list.js";
-import FoodCard from "../components/FoodCard.vue";
+<script setup>
+import { defineAsyncComponent, onMounted, ref, watch } from "vue";
+import filter from "../api/filter";
+import getLists from "../api/list";
+import { useRoute } from "vue-router";
 
-export default {
-  props: ["type"],
+const route = useRoute();
 
-  data() {
-    return {
-      listType: this.type,
-      listData: null,
-      contentLoaded: false,
-      itemName: "",
-      mealsList: [],
-    };
+const FoodCard = defineAsyncComponent(
+  () => import("../components/FoodCard.vue"),
+);
+
+const currType = ref();
+const typeList = ref();
+const selectedType = ref("Select one on the list");
+
+const asideVisible = ref(false);
+const cardsloaded = ref(false);
+
+const meals = ref();
+
+watch(
+  () => route.params.type,
+  async (newType) => {
+    asideVisible.value = false;
+    await loadList(newType.toString());
+    currType.value = newType;
+    asideVisible.value = true;
   },
+  { immediate: true },
+);
 
-  created() {
-    this.$watch(
-      //Watches the change on the URL and resend the request based
-      //on the params (if modified)
-      () => this.$route.params,
-      () => {
-        this.loadTypeList();
-      },
-      { immediate: true },
-    );
-  },
+async function loadList(type) {
+  const res = await getLists(type.charAt(0));
 
-  methods: {
-    async loadTypeList() {
-      const data = await getLists(this.listType.charAt(0));
+  //Different from Categories and Areas, Ingredients do not return an Object<Array<>>
+  //It returns an Array<Object> so this condition is to sort them out.
+  typeList.value =
+    type !== "ingredients"
+      ? res
+          .map((item) => {
+            return Object.values(item).join();
+          })
+          .sort()
+      : res.map((item) => item.strIngredient).sort();
+}
 
-      this.listData = data;
-    },
-
-    async fetchMeals(type, item) {
-      const data = await filter(type, item);
-
-      if (data === null) {
-        this.itemName = "Hm... Nothing here...";
-        this.mealsList = [];
-        this.contentLoaded = true;
-      } else {
-        this.mealsList = data;
-        this.itemName = item.toUpperCase();
-        this.contentLoaded = true;
-      }
-    },
-  },
-  components: {
-    FoodCard,
-  },
-};
+async function fetchMealsByType(type, query) {
+  cardsloaded.value = false;
+  const res = await filter(type.charAt(0), query);
+  meals.value = res;
+  selectedType.value = res !== null ? query : "Nothing here...";
+  cardsloaded.value = true;
+}
 </script>
 
 <template>
   <div>
-    <section :class="{ loading: listData === null, loaded: listData !== null }">
-      <fieldset>
-        <legend>{{ listType.toUpperCase() }}</legend>
-        <div class="list-container">
-          <!-- For ingredients -->
-          <div
-            class="card"
-            v-if="listType === 'ingredients'"
-            v-for="item in listData"
-          >
-            <input
-              type="radio"
-              name="ingRadio"
-              :value="item.strIngredient"
-              :id="item.strIngredient"
-            />
-            <label
-              :for="item.strIngredient"
-              @click="fetchMeals('i', item.strIngredient)"
-            >
-              {{ item.strIngredient }}
-            </label>
+    <div class="wrapper">
+      <transition name="fade">
+        <aside class="side-nav" v-show="asideVisible">
+          <h1>{{ currType }}</h1>
+          <ul>
+            <li v-for="type in typeList">
+              <input
+                type="radio"
+                name="rd-type"
+                :value="type"
+                :id="type"
+                @input="fetchMealsByType(currType, type)"
+              />
+              <label :for="type">{{ type }}</label>
+            </li>
+          </ul>
+        </aside>
+      </transition>
+      <div class="cards-space">
+        <h1 class="item-name">{{ selectedType }}</h1>
+        <Transition name="fade">
+          <div class="cards-space__container" v-if="cardsloaded">
+            <FoodCard v-for="meal in meals" :key="meal.idMeal" :meal="meal" />
           </div>
-          <!-- For Categories -->
-          <div
-            class="card"
-            v-else-if="listType === 'categories'"
-            v-for="item in listData"
-          >
-            <input
-              type="radio"
-              name="catRadio"
-              :value="item.strCategory"
-              :id="item.strCategory"
-            />
-            <label
-              :for="item.strCategory"
-              @click="fetchMeals('c', item.strCategory)"
-            >
-              {{ item.strCategory }}
-            </label>
-          </div>
-          <!-- For Areas -->
-          <div class="card" v-else v-for="item in listData">
-            <input
-              type="radio"
-              name="areRadio"
-              :value="item.strArea"
-              :id="item.strArea"
-            />
-            <label :for="item.strArea" @click="fetchMeals('a', item.strArea)">
-              {{ item.strArea }}
-            </label>
-          </div>
-        </div>
-      </fieldset>
-    </section>
-    <!-- End of Items List Space-->
-    <!-- Meal Cards Space -->
-    <section v-if="contentLoaded">
-      <div class="cards-wrapper">
-        <div class="cards-wrapper__heading">
-          <span class="return" @click="contentLoaded = !contentLoaded">
-            <font-awesome-icon icon="fa-solid fa-x" />
-          </span>
-          <h1 class="item-name">
-            {{ itemName }}
-          </h1>
-        </div>
-        <div class="foodcards-container" v-if="mealsList != []">
-          <FoodCard v-for="item in mealsList" :key="item.idMeal" :meal="item" />
-        </div>
+        </Transition>
       </div>
-    </section>
-    <!-- End Meal Cards Space -->
+    </div>
   </div>
 </template>
 
@@ -141,157 +92,178 @@ export default {
 * {
   margin: 0;
   padding: 0;
-  font-family: $main-font;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  color: $white;
 }
 
-fieldset {
-  border-color: $orange;
-
-  border-radius: 10px;
-
-  margin: 0 3em;
-
-  color: $black;
-
-  legend {
-    font-size: $subsubheading;
-
-    margin-left: 1em;
-  }
-}
-
-.list-container {
+.wrapper {
+  height: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-areas: "aside content";
+  grid-template-columns: 400px 1fr;
 
-  justify-items: center;
+  margin-bottom: 2em;
 
-  row-gap: 1em;
+  align-content: center;
 
-  width: auto;
+  .side-nav {
+    margin-left: -1em;
+    width: 400px;
+    height: 100vh;
+    grid-area: aside;
 
-  max-height: 250px;
+    background-color: $darkorange;
+    border-radius: 0 30px 30px 0;
 
-  overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    row-gap: 2em;
 
-  margin: 1em;
-  padding: 1em;
+    padding-top: 1em;
 
-  .card {
-    width: 200px;
+    h1 {
+      text-align: center;
+      font-size: $subsubheading;
+      text-transform: uppercase;
+    }
 
-    padding: 1em;
+    ul {
+      overflow: scroll;
+      padding: 1em 0;
+      display: flex;
+      flex-direction: column;
+      row-gap: 2em;
+      margin: 0 2em;
+      list-style: none;
 
-    text-align: center;
+      li {
+        display: flex;
+        max-height: 100px;
+        input[type="radio"] {
+          visibility: hidden;
+          margin: 0;
+          padding: 0;
 
-    input[type="radio"] {
-      visibility: hidden;
-      height: 0;
-      width: 0;
+          &:checked + label {
+            background-color: $white;
+            color: $darkorange;
+          }
+        }
+        label {
+          overflow: hidden;
+          cursor: pointer;
 
-      &:checked + label {
-        border-radius: 3px;
-        background-color: $orange;
-        color: $white;
+          font-size: 1.5rem;
+          text-overflow: ellipsis;
+          text-align: left;
 
-        transition: all 0.5s ease;
+          padding: 0.5em 1em;
+          border-radius: 5px;
+
+          transition:
+            color 0.4s ease,
+            background-color 0.4s ease;
+        }
       }
     }
-
-    label {
-      cursor: pointer;
-
-      font-size: 1.3rem;
-      text-decoration: none;
-
-      font-weight: 600;
-
-      padding: 5px;
-
-      color: $orange;
-
-      transition: all 0.5s ease;
-    }
   }
-}
 
-/**/
+  .cards-space {
+    grid-area: content;
 
-.cards-wrapper {
-  &__heading {
     display: flex;
+    flex-direction: column;
     align-content: center;
-    align-items: center;
-    justify-content: center;
-
-    margin-top: 1em;
 
     .item-name {
+      text-transform: uppercase;
       text-align: center;
+      font-size: 4rem;
       color: $black;
-      font-size: $heading;
     }
 
-    .return {
-      font-size: $subheading;
-
-      color: $orange;
-
-      padding: 5px;
-
-      cursor: pointer;
-      margin-right: 1em;
+    &__container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      justify-items: center;
+      row-gap: 3em;
     }
   }
 }
 
-.foodcards-container {
-  margin: 2em;
-  padding: 2em;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  justify-items: center;
-  align-content: center;
-  row-gap: 3em;
-}
-
-.loading {
+.fade-enter-from {
   opacity: 0;
-  transition: all 1s ease;
+  transform: translateY(-100px);
 }
 
-.loaded {
-  opacity: 1;
-  transition: all 1s ease;
+.fade-enter-to {
+  transition:
+    opacity 1s ease,
+    transform 0.6s ease;
+}
+
+.fade-leave-from,
+.fade-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+  transition:
+    opacity 1s ease,
+    transform 0.6s ease;
+}
+
+@media screen and (max-width: 1024px) {
+  .wrapper {
+    grid-template-areas:
+      "aside"
+      "content";
+    grid-template-rows: 300px 1fr;
+    grid-template-columns: auto;
+
+    justify-items: center;
+
+    row-gap: 3em;
+
+    padding: 0.4em;
+
+    .side-nav {
+      width: 100%;
+      margin: 0;
+      max-height: 300px;
+      border-radius: 3px;
+      justify-content: center;
+
+      ul {
+        margin: 0;
+        li {
+          justify-content: center;
+
+          label {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) and (min-width: 480px) {
 }
 
 @media screen and (max-width: 480px) {
-  .cards-wrapper {
-    &__heading {
+  .wrapper {
+    .cards-space {
+      align-items: center;
+
       .item-name {
-        font-size: 2.5em;
+        font-size: 3.2rem;
       }
 
-      .return {
-        display: none;
-        margin-right: 0.5em;
+      &__container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       }
     }
-  }
-
-  .foodcards-container {
-    margin: 1em;
-    padding: 0;
-
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  .foodcards-container {
-    margin: 1em;
-    padding: 0;
   }
 }
 </style>

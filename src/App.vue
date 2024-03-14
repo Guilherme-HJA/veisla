@@ -67,14 +67,19 @@ onMounted(async () => {
 }
 
 .wrapper {
+  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  min-width: 100%;
+
   display: flex;
   flex-direction: column;
   align-content: space-between;
 }
 
 main {
-  min-height: 100vh;
-  min-width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav {
