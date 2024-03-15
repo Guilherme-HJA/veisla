@@ -178,6 +178,7 @@ async function fetchMealsByType(type, query) {
     align-content: center;
 
     .item-name {
+      margin-bottom: 1em;
       text-transform: uppercase;
       text-align: center;
       font-size: 4rem;
@@ -248,16 +249,13 @@ async function fetchMealsByType(type, query) {
   }
 }
 
-@media screen and (max-width: 1024px) and (min-width: 480px) {
-}
-
 @media screen and (max-width: 480px) {
   .wrapper {
     .cards-space {
       align-items: center;
 
       .item-name {
-        font-size: 3.2rem;
+        font-size: 3rem;
       }
 
       &__container {

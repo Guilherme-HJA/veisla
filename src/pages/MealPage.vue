@@ -1,6 +1,6 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import getMealById from "../api/lookup";
 
 const props = defineProps({
@@ -11,6 +11,8 @@ const meal = ref({});
 const mealInstructions = ref([""]);
 const requirements = ref([]);
 const contentLoaded = ref(false);
+
+const onView = ref(false);
 
 onBeforeMount(async () => {
   meal.value = await getMealById(props.mealID);
@@ -44,6 +46,20 @@ onBeforeMount(async () => {
   //Sets the visibility of the wrapper element
   contentLoaded.value = true;
 });
+
+onMounted(() => {
+  const observer = new IntersectionObserver((e) => {
+    e.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+      } else {
+        entry.target.classList.remove("show");
+      }
+    });
+  });
+  const hidden = document.querySelectorAll(".hidden");
+  hidden.forEach((el) => observer.observe(el));
+});
 </script>
 
 <template>
@@ -76,7 +92,13 @@ onBeforeMount(async () => {
         <div class="heading">
           <div class="meal-image">
             <figure class="image">
-              <img loading="lazy" :src="meal.strMealThumb" alt="meal.strMeal" />
+              <img
+                loading="lazy"
+                width="600"
+                height="600"
+                :src="meal.strMealThumb"
+                alt="meal.strMeal"
+              />
             </figure>
           </div>
           <div class="meal-info">
@@ -88,11 +110,20 @@ onBeforeMount(async () => {
               <h2>Area</h2>
               <p>{{ meal.strArea }}</p>
             </div>
+            <!-- <div class="nav-buttons"> -->
+            <!--   <button> -->
+            <!--     <FontAwesomeIcon icon="fa-solid fa-arrow-left" />Previous -->
+            <!--   </button> -->
+            <!--   <button> -->
+            <!--     Next<FontAwesomeIcon icon="fa-solid fa-arrow-right" /> -->
+            <!--   </button> -->
+            <!-- </div> -->
           </div>
+
           <!-- meal-info -->
         </div>
         <div class="content">
-          <div class="ingredients">
+          <div class="ingredients" :class="{ hidden: !onView }">
             <h2>Ingredients</h2>
             <ul>
               <li v-for="item in requirements">
@@ -103,9 +134,9 @@ onBeforeMount(async () => {
             </ul>
           </div>
           <!-- ingredients -->
-          <div class="instructions">
+          <div class="instructions" :class="{ hidden: !onView }">
             <h3>Instructions</h3>
-            <p v-for="text in mealInstructions">{{ text }} <br /></p>
+            <p v-for="text in mealInstructions">{{ text }} <br /><br /></p>
           </div>
         </div>
         <!-- content -->
@@ -186,15 +217,17 @@ li {
       -moz-box-shadow: -3px 8px 21px 0px rgba(25, 25, 25, 0.71);
 
       border-radius: 15px;
+
+      overflow: hidden;
       .image {
+        border-radius: inherit;
         img {
-          border-radius: 10px;
-
-          max-width: 100%;
-          max-height: auto;
-
+          transform: scale(1.1);
           width: 100%;
           height: auto;
+
+          max-width: 100%;
+          max-height: 600px;
         }
       }
     }
@@ -210,6 +243,33 @@ li {
       p {
         text-transform: uppercase;
         font-size: 2.5rem;
+        font-style: italic;
+      }
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+
+      button {
+        border: none;
+        color: $orange;
+        background: none;
+        font-size: 2rem;
+      }
+    }
+
+    animation: pop-left 1s ease;
+
+    @keyframes pop-left {
+      from {
+        transform: translateX(-200px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
       }
     }
   }
@@ -220,13 +280,18 @@ li {
     margin: 2em;
 
     .ingredients {
+      background-color: $darkorange;
+      border-radius: 5px;
+      padding: 0 0.5em 1em 0.5em;
+
       h2 {
+        color: $white2;
         text-align: center;
         text-transform: uppercase;
         font-size: 4em;
       }
       ul {
-        border-left: 4px solid $orange;
+        border-left: 4px solid $white;
 
         margin-top: 0.75em;
         padding-left: 1em;
@@ -237,11 +302,13 @@ li {
 
         li {
           p {
-            font-size: 2em;
+            color: $white;
+            font-size: 1.5em;
 
             span {
-              color: $black2;
+              color: $white2;
               font-style: italic;
+              opacity: 50%;
             }
           }
         }
@@ -271,17 +338,42 @@ li {
   }
 }
 
-@media screen and (max-width: $large) {
-  .youtube {
-    display: none;
+.show {
+  animation: pop-right 1s ease;
+  @keyframes pop-right {
+    from {
+      transform: translateX(200px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
 
-@media screen and (min-width: $medium) and (max-width: $medium) {
+@media screen and (min-width: $large) {
+  .youtube {
+    display: none;
+  }
+
+  .content {
+    .ingredients {
+      ul {
+        li {
+          font-size: 1.7em;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $medium) and (max-width: $big) {
   .back,
   .youtube {
     display: none;
   }
+
   .mealName {
     font-size: 4rem;
   }
