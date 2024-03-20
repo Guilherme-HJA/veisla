@@ -22,10 +22,12 @@ const meals = ref();
 watch(
   () => route.params.type,
   async (newType) => {
-    asideVisible.value = false;
-    await loadList(newType.toString());
-    currType.value = newType;
-    asideVisible.value = true;
+    if (newType !== undefined) {
+      asideVisible.value = false;
+      await loadList(newType.toString());
+      currType.value = newType;
+      asideVisible.value = true;
+    }
   },
   { immediate: true },
 );

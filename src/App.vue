@@ -22,7 +22,7 @@ onMounted(async () => {
       <div class="nav">
         <figure class="nav__image logo">
           <router-link class="logo__link" to="/"
-            ><img src="./assets/logo.webp" alt="veisla_logo"
+            ><img loading="lazy" src="./assets/logo.svg" alt="veisla_logo"
           /></router-link>
         </figure>
         <div class="nav__links">
@@ -47,7 +47,9 @@ onMounted(async () => {
         </router-view>
       </section>
     </main>
-    <Footer />
+    <footer>
+      <Footer />
+    </footer>
   </div>
 </template>
 
@@ -67,14 +69,13 @@ onMounted(async () => {
 }
 
 .wrapper {
-  height: 100vh;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   min-width: 100%;
 
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 main {
@@ -90,7 +91,8 @@ main {
   font-size: 1.6rem;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-content: center;
 
   a {
     text-decoration: none;
@@ -110,10 +112,7 @@ main {
   }
 
   &__image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    display: none;
     img {
       width: 100px;
       height: 100px;
@@ -139,10 +138,18 @@ a.router-link-active {
   .nav {
     flex-direction: column;
 
-    img {
-      height: 300px;
-      width: 300px;
+    &__image {
+      display: block;
+      img {
+        max-height: auto;
+        width: 100%;
+      }
     }
+  }
+
+  .wrapper {
+    grid-template-columns: 350px;
+    justify-content: center;
   }
 }
 

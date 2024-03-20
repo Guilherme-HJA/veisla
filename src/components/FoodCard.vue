@@ -12,8 +12,8 @@ export default {
           <figure>
             <img
               loading="lazy"
-              width="400"
-              height="400"
+              width="350"
+              height="350"
               :src="meal.strMealThumb"
               :alt="meal.strMeal"
             />
@@ -46,8 +46,10 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 .card {
   position: relative;
 
-  width: 400px;
+  width: 350px;
   height: auto;
+
+  border-radius: 5px;
 
   transition: all 0.7s ease;
 
@@ -56,11 +58,13 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 
   &:hover {
-    transform: scale(1.07);
+    transform: scale(1.05);
+    box-shadow: $shadow-mobile;
   }
 
   &:hover &__content {
     .image figure img {
+      transform: scale(1.1);
       filter: brightness(60%);
       -webkit-filter: brightness(60%);
     }
@@ -71,12 +75,12 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   }
 
   &__content {
-    border-radius: 20px;
+    overflow: hidden;
 
+    border-radius: 5px;
     .image {
       figure {
         img {
-          border-radius: 20px;
           -webkit-transition: all 1s ease;
           -moz-transition: all 1s ease;
           -o-transition: all 1s ease;
@@ -88,6 +92,12 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
           min-width: 100%;
           min-height: auto;
+
+          overflow: hidden;
+
+          transition:
+            transform 1s ease,
+            filter 1s ease;
         }
       }
     }
@@ -109,13 +119,13 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 250px;
+        max-width: 270px;
 
-        font-size: 1.7rem;
+        font-size: 1.4rem;
       }
 
       h2 {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 400;
       }
     }
@@ -124,8 +134,6 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
 @media screen and (max-width: $large) {
   .card {
-    width: 400px;
-
     &__content {
       .image figure img {
         filter: brightness(70%);
@@ -136,12 +144,6 @@ $shadow-mobile: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
         opacity: 1;
       }
     }
-  }
-}
-
-@media screen and (max-width: $big) {
-  .card {
-    width: 400px;
   }
 }
 

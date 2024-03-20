@@ -52,8 +52,6 @@ onMounted(() => {
     e.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("show");
-      } else {
-        entry.target.classList.remove("show");
       }
     });
   });
@@ -136,7 +134,7 @@ onMounted(() => {
           <!-- ingredients -->
           <div class="instructions" :class="{ hidden: !onView }">
             <h3>Instructions</h3>
-            <p v-for="text in mealInstructions">{{ text }} <br /><br /></p>
+            <p v-for="text in mealInstructions">{{ text }} <br /></p>
           </div>
         </div>
         <!-- content -->

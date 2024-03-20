@@ -12,7 +12,7 @@ const routes = [
     name: "Lists",
     component: ListViews,
     props: true,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to, _from, next) => {
       function isValid(param) {
         const types = ["ingredients", "categories", "areas"];
 
@@ -29,7 +29,7 @@ const routes = [
     name: "Meal",
     component: MealPage,
     props: true,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to, _from, next) => {
       function isValidID(param) {
         //URL Validation
         const id = parseInt(param);

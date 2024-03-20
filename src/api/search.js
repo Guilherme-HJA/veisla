@@ -9,10 +9,10 @@ function searchMeal(query) {
   //1. If the user input is of only one letter (the first letter)
   //2. If the user input is of more than one letter
 
-  if (query.value.length === 1) {
-    URL = SEARCH + `f=${query.value}`;
+  if (query.length === 1) {
+    URL = SEARCH + `f=${query}`;
   } else {
-    URL = SEARCH + `s=${query.value}`;
+    URL = SEARCH + `s=${query}`;
   }
 
   const meals = axios

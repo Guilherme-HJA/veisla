@@ -1,35 +1,37 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import searchMeal from "../api/search.js";
 import randomMeal from "../api/random.js";
-import FoodCard from "../components/FoodCard.vue";
 
-const mealQuery = ref("");
-const queryList = ref([]);
+const FoodCard = defineAsyncComponent(
+  () => import("../components/FoodCard.vue"),
+);
+
+const query = ref("");
+const meals = ref();
 const name = ref("");
 const randomMeals = ref([]);
-const randomLoad = ref(false);
-const mainLoad = ref(false);
+const randomVisible = ref(false);
+const mainVisible = ref(false);
 
 //Utilizes the searchMeal function from the search.js file
-async function search() {
-  randomLoad.value = false;
-  mainLoad.value = false;
-  await new Promise((resolve) => setTimeout(resolve, 500));
+async function fetchMealsByQuery(meal) {
+  if (meal !== undefined || meal !== "") {
+    randomVisible.value = false;
+    mainVisible.value = false;
 
-  if (mealQuery.value !== "") {
-    const query = await searchMeal(mealQuery);
-
-    if (query === null) {
-      queryList.value = [];
-      name.value = "Hm... Nothing here";
-      mealQuery.value = "";
+    const res = await searchMeal(meal);
+    if (res !== null) {
+      meals.value = res;
+      name.value =
+        meal.length === 1
+          ? `Starting with '${meal.charAt(0)}'`
+          : meal.toString().toUpperCase();
+      query.value = "";
     } else {
-      queryList.value = query;
-      name.value = mealQuery.value.toUpperCase();
-      mealQuery.value = "";
-      mainLoad.value = true;
+      name.value = "Nothing here but us...";
     }
+    mainVisible.value = true;
   }
 }
 
@@ -44,225 +46,252 @@ async function getRandomMeals() {
   }
 
   randomMeals.value = meals;
-  randomLoad.value = !randomLoad.value;
+  randomVisible.value = !randomVisible.value;
 }
 </script>
 
 <template>
-  <div>
-    <header class="header">
-      <h2 class="header__title">Your handy recipes library</h2>
-    </header>
-    <section>
-      <form v-on:submit.prevent="search" class="search-field">
+  <div class="home-wrapper">
+    <section class="home">
+      <div class="home__header">
+        <figure class="image">
+          <img
+            loading="lazy"
+            src="../assets/logo.svg"
+            width="500"
+            alt="Veisla_Logo"
+          />
+        </figure>
+      </div>
+
+      <form
+        v-on:submit.prevent="fetchMealsByQuery(query)"
+        class="home__search-field"
+      >
         <div class="field">
           <input
             type="text"
             class="search-input"
             placeholder="Search your meal here..."
-            v-model="mealQuery"
+            v-model="query"
           />
           <button type="submit">Search</button>
         </div>
-        <!-- field -->
       </form>
-    </section>
-    <section>
-      <div
-        :class="{ 'main-active': mainLoad, inactive: !mainLoad }"
-        v-if="name.length !== 0"
-      >
-        <h1 class="meal-name" v-if="name.length > 1">{{ name }}</h1>
-        <h1 class="meal-name" v-else>Starting with '{{ name }}'</h1>
-      </div>
-      <div class="container" v-if="queryList.value != []">
-        <FoodCard v-for="item in queryList" :key="item.idMeal" :meal="item" />
-      </div>
-    </section>
-    <section>
-      <div
-        class="random-meals"
-        :class="{ 'random-active': randomLoad }"
-        v-if="randomLoad"
-      >
-        <div class="caption">
-          <h1>If you are unsure of what to search, we have some suggestions</h1>
+      <Transition name="fadeDown">
+        <div class="home__search-results" v-if="mainVisible">
+          <div class="cards-space">
+            <h1>{{ name }}</h1>
+            <div class="grid">
+              <FoodCard v-for="meal in meals" :key="meal.idMeal" :meal="meal" />
+            </div>
+          </div>
         </div>
-        <div class="random container">
-          <FoodCard
-            v-for="item in randomMeals"
-            :key="item.idMeal"
-            :meal="item"
-          />
-        </div>
-      </div>
+      </Transition>
     </section>
+
+    <Transition name="fadeDown">
+      <section class="random-content" v-if="randomVisible">
+        <div class="wrapper">
+          <h1>Don't know where to start? No worries, we got ya...</h1>
+          <div class="grid random-cards">
+            <FoodCard
+              v-for="meal in randomMeals"
+              :key="meal.idMeal"
+              :meal="meal"
+            />
+          </div>
+        </div>
+      </section>
+    </Transition>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "../styles/variables";
 
-.header {
-  text-align: center;
-  color: $black;
-
-  &__title {
-    font-size: $heading;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.search-field {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-direction: column;
+.home-wrapper {
+  height: 100%;
+  display: grid;
+  margin: 2em;
+  grid-template-areas: "random main";
+  grid-template-columns: auto 1fr;
+}
 
+.home {
+  grid-area: main;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
 
-  margin-top: 2em;
-
-  .field {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
-  }
-
-  .search-input {
-    width: 70%;
-
-    font-size: 1.7rem;
-
-    background-color: $white;
-
-    border: none;
-    outline: none;
-    border-radius: 20px 0 0 20px;
-
-    padding: 10px 0 10px 20px;
-  }
-
-  button {
-    border: none;
-
-    font-size: 1.6rem;
-    border-radius: 0 20px 20px 0;
-
-    padding: 5px 10px;
-
-    color: $white;
-    background-color: $darkorange;
-
-    cursor: pointer;
-  }
-}
-
-.meal-name {
-  font-size: $heading;
-  text-align: center;
-  margin: 0.5em 0;
-  color: $black;
-}
-
-.random-meals {
-  margin: 1em;
-  padding: 1em;
-
-  .caption {
-    text-align: center;
-    color: $black;
-    font-size: 2rem;
-  }
-}
-
-.random-active {
-  animation: fadeIn 2s forwards;
-}
-
-.main-active {
-  animation: fadeIn 1s forwards;
-}
-
-.inactive {
-  animation: fadeOut 1s forwards;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 100;
-  }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 100;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-.container {
-  margin: 2em;
-  padding: 2em;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  justify-items: center;
-  align-content: center;
-
-  row-gap: 3em;
-}
-
-@media screen and (max-width: 480px) {
-  .container,
-  .random {
-    align-self: center;
-    justify-content: center;
-    justify-items: center;
-    align-content: center;
-    align-items: center;
-
-    row-gap: 3em;
-
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
-
-  .random-meals > .caption {
-    font-size: $text-mobile;
-  }
-
-  .search-field {
-    .field {
-      flex-direction: column;
+  &__header {
+    .image {
+      display: flex;
+      justify-content: center;
       align-items: center;
 
-      gap: 1em;
+      img {
+        align-self: center;
+        max-height: auto;
+        width: 50%;
+      }
+    }
+  }
 
-      .search-input {
-        padding: 10px 0 10px 15px;
-        border-radius: 15px;
+  &__search-field {
+    padding: 1em;
+    width: 100%;
 
-        font-size: 1.4rem;
+    .field {
+      display: flex;
+      justify-content: space-between;
+      input {
+        font-size: 1.6rem;
+
+        outline: 2px solid #002626;
+
+        border: none;
+        border-radius: 10px;
+
+        width: 80%;
+
+        padding: 10px 0 10px 20px;
+
+        color: #002626;
+        caret-color: #002626;
       }
 
       button {
-        border-radius: 15px;
+        border: none;
+        font-size: 1.6rem;
+        border-radius: 10px;
+        background-color: #002626;
+        color: #f7f3e3;
+        padding: 0.5em 1em;
+      }
+    }
+  }
+  &__search-results {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+
+      margin-bottom: 1em;
+    }
+    .cards-space {
+      padding: 4em;
+    }
+  }
+}
+
+.random-content {
+  grid-area: random;
+  padding: 1em;
+  background-color: #002626;
+
+  transition: height 1s ease-in;
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    row-gap: 1em;
+
+    h1 {
+      font-size: 1.3rem;
+      text-align: center;
+      text-wrap: wrap;
+
+      max-width: 300px;
+
+      color: #f7f3e3;
+    }
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  justify-items: center;
+  align-content: center;
+  row-gap: 3em;
+}
+
+@media (max-width: 35em) {
+  .home-wrapper {
+    grid-template-areas:
+      "main"
+      "random";
+
+    grid-template-columns: 350px;
+    justify-content: center;
+  }
+
+  .home {
+    &__search-field {
+      .field {
+        flex-direction: column;
+        row-gap: 1em;
+        input {
+          width: 100%;
+
+          &::placeholder {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+
+    &__search-results {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h1 {
+        text-align: center;
+        font-size: 3rem;
+
+        margin-bottom: 1em;
+      }
+      .cards-space {
+        padding: 0;
       }
     }
   }
 }
 
-@media (min-width: 480px) and (max-width: 720px) {
-  .container {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    align-self: center;
-  }
+.fadeDown-enter-from {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+.fadeDown-enter-to {
+  transition:
+    opacity 1.5s ease,
+    transform 1s ease;
+}
+
+.fadeDown-leave-from,
+.fadeDown-leave-to {
+  transform: translateY(-50px);
+  opacity: 0;
+  transition:
+    opacity 1s ease,
+    transform 0.6s ease;
 }
 </style>
