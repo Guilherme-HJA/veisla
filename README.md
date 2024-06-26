@@ -75,7 +75,7 @@ Just like this:
 ```bash
   VITE v4.2.1  ready in 1337 ms
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-  ➜  press h to show help
+  -  Local:   http://localhost:5173/
+  -  Network: use --host to expose
+  -  press h to show help
 ```
